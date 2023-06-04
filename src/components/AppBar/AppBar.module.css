@@ -1,0 +1,14 @@
+.navList {
+  list-style: none;
+  padding: 20px;
+  padding-left: 50px;
+  margin: 0;
+
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+.navList__item_border {
+  padding-left: 40px;
+  border-left: 2px solid gray;
+}
