@@ -95,6 +95,7 @@ export default function ShoppingCart() {
     setUserAddress('');
     setMyGoods([]);
     localStorage.clear();
+    localStorage.setItem('order', JSON.stringify(myOrder));
     return myOrder;
   };
   return (
