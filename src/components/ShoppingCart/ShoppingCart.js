@@ -1,5 +1,6 @@
 // import React from 'react';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styles from './ShoppingCart.module.css';
 
 export default function ShoppingCart() {
@@ -8,8 +9,8 @@ export default function ShoppingCart() {
   const [userEmail, setUserEmail] = useState('');
   const [userAddress, setUserAddress] = useState('');
   const [userPhone, setUserPhone] = useState('');
-
   const [totalPrice, setTotalPrice] = useState(0);
+  const [orderStatus, setOrderStatus] = useState(0);
 
   useEffect(() => {
     const itemsInLocalStorage = JSON.parse(localStorage.getItem('items'));
@@ -89,15 +90,32 @@ export default function ShoppingCart() {
     };
 
     console.log('myOrder: ', myOrder);
+
+    localStorage.setItem('order', JSON.stringify(myOrder));
+
+    const result = axios
+      .post('http://localhost:3001/api/orders', myOrder)
+      .then(res => {
+        setOrderStatus(res.status);
+        console.log('Your order: ', res.data);
+        return alert(
+          'Your order has been sent for processing. Thank you for choosing our site! Everything will be Ukraine!'
+        );
+      })
+      .catch(err => console.log('err: ', err));
+    return result;
+  };
+
+  if (orderStatus === 200) {
     setUserName('');
     setUserEmail('');
     setUserPhone('');
     setUserAddress('');
     setMyGoods([]);
     localStorage.clear();
-    localStorage.setItem('order', JSON.stringify(myOrder));
-    return myOrder;
-  };
+    setOrderStatus(0);
+  }
+
   return (
     <div className={styles.cart__container}>
       <section className={styles.cart__section}>
@@ -202,6 +220,14 @@ export default function ShoppingCart() {
         <button
           className={styles.total__submit}
           type="button"
+          disabled={
+            !userName ||
+            !userPhone ||
+            !userEmail ||
+            !userAddress ||
+            !myGoods ||
+            !totalPrice
+          }
           onClick={onSubmit}
         >
           Submit
