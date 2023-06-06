@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Shop.module.css';
+import apiUrl from '../../apiUrl';
 
 export default function Shop() {
   const [shops, setShops] = useState([]);
   const [goods, setGoods] = useState([]);
 
   useEffect(() => {
-    axios('http://localhost:3001/api/shops')
+    axios(`${apiUrl}/api/shops`)
       .then(res => setShops([...res.data]))
       .catch(err => console.log('err: ', err));
   }, []);
 
   const shopHandler = id => {
     id &&
-      axios(`http://localhost:3001/api/goods/${id}`)
+      axios(`${apiUrl}/api/goods/${id}`)
         .then(res => setGoods(res.data))
         .catch(err => console.log('err: ', err));
     return;

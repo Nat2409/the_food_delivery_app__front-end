@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './ShoppingCart.module.css';
+import apiUrl from '../../apiUrl';
 
 export default function ShoppingCart() {
   const [myGoods, setMyGoods] = useState([]);
@@ -94,7 +95,7 @@ export default function ShoppingCart() {
     localStorage.setItem('order', JSON.stringify(myOrder));
 
     const result = axios
-      .post('http://localhost:3001/api/orders', myOrder)
+      .post(`${apiUrl}/api/orders`, myOrder)
       .then(res => {
         setOrderStatus(res.status);
         console.log('Your order: ', res.data);
