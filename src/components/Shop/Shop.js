@@ -9,6 +9,7 @@ export default function Shop() {
   const [goods, setGoods] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingGoods, setIsLoadingGoods] = useState(false);
+  const [selectedShopId, setSelectedShopId] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
@@ -24,6 +25,7 @@ export default function Shop() {
   }, []);
 
   const shopHandler = id => {
+    setSelectedShopId(id);
     setIsLoadingGoods(true);
     id &&
       axios(`${apiUrl}/api/goods/${id}`)
@@ -67,6 +69,7 @@ export default function Shop() {
                   <button
                     className={styles.shops__button}
                     onClick={() => shopHandler(_id)}
+                    disabled={selectedShopId && selectedShopId !== _id}
                   >
                     {name}
                   </button>
