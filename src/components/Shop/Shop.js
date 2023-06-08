@@ -2,15 +2,24 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Shop.module.css';
 import apiUrl from '../../apiUrl';
+import Spinner from '../Spinner';
 
 export default function Shop() {
   const [shops, setShops] = useState([]);
   const [goods, setGoods] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     axios(`${apiUrl}/api/shops`)
-      .then(res => setShops([...res.data]))
-      .catch(err => console.log('err: ', err));
+      .then(res => {
+        setShops([...res.data]);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.log('err: ', err);
+        setIsLoading(false);
+      });
   }, []);
 
   const shopHandler = id => {
@@ -41,6 +50,7 @@ export default function Shop() {
     <div className={styles.shops__container}>
       <section className={styles.shops__section}>
         <h2 className={styles.shops__title}>Shops:</h2>
+        {isLoading && <Spinner />}
         <ul className={styles.shops__list}>
           {shops &&
             shops.map(({ _id, name }) => {
