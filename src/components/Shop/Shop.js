@@ -8,6 +8,7 @@ export default function Shop() {
   const [shops, setShops] = useState([]);
   const [goods, setGoods] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingGoods, setIsLoadingGoods] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -23,10 +24,17 @@ export default function Shop() {
   }, []);
 
   const shopHandler = id => {
+    setIsLoadingGoods(true);
     id &&
       axios(`${apiUrl}/api/goods/${id}`)
-        .then(res => setGoods(res.data))
-        .catch(err => console.log('err: ', err));
+        .then(res => {
+          setGoods(res.data);
+          setIsLoadingGoods(false);
+        })
+        .catch(err => {
+          console.log('err: ', err);
+          setIsLoadingGoods(false);
+        });
     return;
   };
 
@@ -69,6 +77,7 @@ export default function Shop() {
       </section>
       <section className={styles.shops__section}>
         <ul className={styles.goods__list}>
+          {isLoadingGoods && <Spinner />}
           {goods &&
             goods.map(good => {
               return (
